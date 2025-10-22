@@ -6,7 +6,7 @@ import com.component.orders.models.OrderResponse
 import com.component.orders.models.Product
 import com.component.orders.models.messages.ProductMessage
 import io.specmatic.jms.mock.JmsMock
-import io.specmatic.jms.mock.models.Expectation
+import io.specmatic.jms.models.Expectation
 import io.specmatic.stub.ContractStub
 import io.specmatic.stub.createStub
 import org.assertj.core.api.Assertions.assertThat

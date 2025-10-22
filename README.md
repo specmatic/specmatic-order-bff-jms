@@ -7,9 +7,9 @@ This sample project demonstrates how we can practice contract-driven development
 Here, Specmatic is used to stub calls to domain API service based on its OpenAPI spec and mock JMS based on its AsyncAPI spec.  
 Please contact us at https://specmatic.io if you wish to try it out.
 
-Here is the domain api [contract/open api spec](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v1.yaml)
+Here is the domain api [contract/open api spec](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/openapi/api_order_v1.yaml)
 
-Here is the [AsyncAPI spec](https://github.com/znsio/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/jms.yaml) of JMS that defines queues and message schema.
+Here is the [AsyncAPI spec](https://github.com/specmatic/specmatic-order-contracts/blob/main/io/specmatic/examples/store/asyncapi/jms.yaml) of JMS that defines queues and message schema.
 
 ## Definitions
 * BFF: Backend for Front End
@@ -24,11 +24,12 @@ A typical web application might look like this. We can use Specmatic to practice
 ## Tech
 1. Spring boot
 2. Specmatic
-3. Specmatic Beta extension (for mocking JMS)
+3. Specmatic JMS
 4. Karate
- 
+5. Docker
+
 ## Start BFF Server
-This will start the springboot BFF server
+This will start the springBoot BFF server
 ```shell
 ./gradlew bootRun
 ```
@@ -36,13 +37,11 @@ Access find orders api at http://localhost:8080/findAvailableProducts
 _*Note:* Unless domain api service is running on port 9000, above requests will fail. Move to next section for solution!_
 
 ### Start BFF Server with Domain API Stub
-1. Download Specmatic Jar from [github](https://github.com/znsio/specmatic/releases)
-
-2. Start domain api stub server
+1. Start domain api mock server
 ```shell
-java -jar specmatic.jar stub
+docker run --rm -p 9000:9000 -v "$(pwd):/usr/src/app" specmatic/specmatic:latest virtualize --port 9000
 ```
-Access find orders api again at http://localhost:8080/findAvailableProducts with result like
+Access find orders api again at http://localhost:8080/findAvailableProducts?type=gadget with result like
 ```json
 [{"id":698,"name":"NUBYR","type":"book","inventory":278}]
 ```

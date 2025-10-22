@@ -5,7 +5,7 @@ import org.springframework.jms.core.JmsTemplate
 import org.springframework.jms.core.MessageCreator
 import org.springframework.stereotype.Component
 import java.io.Serializable
-import javax.jms.Session
+import jakarta.jms.Session
 
 @Component
 class JmsSender @Autowired constructor(private val jmsTemplate: JmsTemplate) {
