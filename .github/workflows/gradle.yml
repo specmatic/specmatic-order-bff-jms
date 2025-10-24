@@ -18,31 +18,17 @@ jobs:
         java: [17]
     runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with: { fetch-depth: 0 }
+
     - name: Set up JDK ${{ matrix.java }}
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
 
-    - name: Checkout Specmatic JMS Repo
-      uses: actions/checkout@v3
-      with:
-        repository: znsio/specmatic-jms
-        path: specmatic-jms
-        token: ${{ secrets.ACTIONS_GITHUB_TOKEN }}
-
-    - name: Grant execute permission for gradlew
-      working-directory: specmatic-jms
-      run: chmod +x gradlew
-
-    - name: Publish Specmatic JMS to Local Maven Repo
-      working-directory: specmatic-jms
-      run: ./gradlew publishToMavenLocal
-
-    - name: Grant execute permission for gradlew on BFF repo
-      run: chmod +x gradlew
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
 
     - name: Build BFF project with Gradle
       run: ./gradlew build
