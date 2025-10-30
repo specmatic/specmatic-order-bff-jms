@@ -7,7 +7,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id 'java'
     id "org.jetbrains.kotlin.jvm" version "2.1.20"
-	id 'org.springframework.boot' version '2.7.11'
+	id 'org.springframework.boot' version '2.7.18'
 	id 'org.jetbrains.kotlin.plugin.spring' version '2.1.20'
     id 'jacoco'
 }
@@ -37,15 +37,15 @@ jacocoTestReport {
 }
 
 dependencies {
-    implementation('org.springframework.boot:spring-boot-starter-web:3.5.6')
-    implementation('org.springframework.boot:spring-boot-starter-test:3.5.6')
+    implementation('org.springframework.boot:spring-boot-starter-web:3.5.7')
+    implementation('org.springframework.boot:spring-boot-starter-test:3.5.7')
     implementation ('com.intuit.karate:karate-junit5:1.4.1') {
         exclude group: 'io.netty'
     }
 
     implementation('org.jetbrains.kotlin:kotlin-reflect')
-    implementation('org.springframework.boot:spring-boot-starter-actuator:3.5.6')
-    implementation ('org.springframework.boot:spring-boot-starter-activemq:3.5.6') {
+    implementation('org.springframework.boot:spring-boot-starter-actuator:3.5.7')
+    implementation ('org.springframework.boot:spring-boot-starter-activemq:3.5.7') {
         exclude group: 'org.springframework.boot'
         exclude group: 'org.apache.tomcat.embed'
     }
