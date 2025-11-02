@@ -50,8 +50,8 @@ dependencies {
         exclude group: 'org.apache.tomcat.embed'
     }
 
-    testImplementation('org.assertj:assertj-core:3.27.6', 'org.junit.jupiter:junit-jupiter-api:5.9.3')
-    testImplementation('org.junit.jupiter:junit-jupiter:5.6.0')
+    testImplementation('org.assertj:assertj-core:3.27.6', 'org.junit.jupiter:junit-jupiter-api:5.14.1')
+    testImplementation('org.junit.jupiter:junit-jupiter:5.14.1')
     testImplementation('io.specmatic:specmatic-core:2.27.1')
     testImplementation('io.specmatic:junit5-support:2.27.1')
     testImplementation('io.specmatic.jms:specmatic-jms:0.6.1')
