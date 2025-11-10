@@ -1,7 +1,7 @@
 # Specmatic Sample: SpringBoot BFF calling Domain API and JMS
 
 * [Specmatic Website](https://specmatic.io)
-* [Specmatic Documentation](https://specmatic.io/documentation.html)
+* [Specmatic Documentation](https://docs.specmatic.io)
 
 This sample project demonstrates how we can practice contract-driven development and contract testing in a SpringBoot (Kotlin) application that depends on an external domain service and JMS.  
 Here, Specmatic is used to stub calls to domain API service based on its OpenAPI spec and mock JMS based on its AsyncAPI spec.  
@@ -29,14 +29,29 @@ A typical web application might look like this. We can use Specmatic to practice
 
 ## Start BFF Server
 This will start the springBoot BFF server
+
+- On Unix and Windows Powershell, please run:
 ```shell
 ./gradlew bootRun
 ```
+
+- On Windows Command Prompt, please run:
+```shell
+gradlew bootRun
+```
+
 Access find orders api at http://localhost:8080/findAvailableProducts
 _*Note:* Unless domain api service is running on port 9000 and JMS is set up, above requests will fail.
 
 ## Run Tests
 This will start the specmatic stub server for domain api using the information in specmatic.json and run the karate tests that expects the domain api at port 9000.
+
+- On Unix and Windows Powershell, please run: 
 ```shell
 ./gradlew test
+```
+
+- On Windows Command Prompt, please run:
+```shell
+gradlew test
 ```
