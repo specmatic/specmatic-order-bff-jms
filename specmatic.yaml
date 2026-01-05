@@ -6,4 +6,10 @@ contracts:
       - "io/specmatic/examples/store/openapi/product_search_bff_api.yaml"
     consumes:
       - "io/specmatic/examples/store/openapi/api_order_v1.yaml"
-      - "io/specmatic/examples/store/asyncapi/jms.yaml"
+      - specs:
+          - "io/specmatic/examples/store/asyncapi/jms.yaml"
+        specType: asyncapi
+        config:
+          servers:
+            - host: tcp://localhost:9127
+              protocol: jms

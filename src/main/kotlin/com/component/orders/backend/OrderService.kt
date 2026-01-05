@@ -52,7 +52,9 @@ class OrderService {
         val products = fetchProductsFromBackendAPI(type)
         products.forEach {
             val productMessage = ProductMessage(it.id, it.name, it.inventory)
+            println("[OrderService] Sending following message on queue '$jmsQueue': $productMessage")
             jmsSender.sendObjectMessage(jmsQueue, productMessage)
+            println("[OrderService] Message sent successfully")
         }
         return products
     }
