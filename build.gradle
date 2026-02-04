@@ -57,7 +57,7 @@ dependencies {
 //    testImplementation('org.junit.jupiter:junit-jupiter:6.0.1')
     testImplementation("io.specmatic:specmatic-core:${specmaticVersion}")
     testImplementation("io.specmatic:junit5-support:${specmaticVersion}")
-    testImplementation("io.specmatic.async:specmatic-async:2.1.1")
+    testImplementation("io.specmatic.async:specmatic-async:2.2.5")
 }
 
 sourceSets {
