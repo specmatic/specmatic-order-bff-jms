@@ -7,21 +7,10 @@ plugins {
 }
 
 repositories {
-    maven {
-        name = "sonatypeSnapshots"
-        url = uri("https://central.sonatype.com/repository/maven-snapshots")
-        mavenContent {
-            snapshotsOnly()
-        }
-    }
-
     mavenCentral()
 
     maven {
         url "https://packages.confluent.io/maven/"
-    }
-    maven {
-        url "https://repo.specmatic.io/releases"
     }
 }
 
