@@ -12,6 +12,7 @@ repositories {
     maven {
         url "https://packages.confluent.io/maven/"
     }
+    mavenLocal()
 }
 
 jacocoTestReport {
