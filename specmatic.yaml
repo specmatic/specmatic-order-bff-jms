@@ -3,13 +3,24 @@ contracts:
   - git:
       url: "https://github.com/specmatic/specmatic-order-contracts.git"
     provides:
-      - "io/specmatic/examples/store/openapi/product_search_bff_api.yaml"
+      - specs:
+          - "io/specmatic/examples/store/openapi/product_search_bff_api.yaml"
+        specType: openapi
+        config:
+          baseUrl: "{APP_URL:http://localhost:8080}"
     consumes:
-      - "io/specmatic/examples/store/openapi/api_order_v1.yaml"
+      - specs:
+          - "io/specmatic/examples/store/openapi/api_order_v1.yaml"
+        specType: openapi
+        config:
+          baseUrl: http://localhost:9000
       - specs:
           - "io/specmatic/examples/store/asyncapi/jms.yaml"
         specType: asyncapi
         config:
+          inMemoryBroker:
+            host: localhost
+            port: 9127
           servers:
             - host: tcp://localhost:9127
               protocol: jms
