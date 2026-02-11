@@ -14,7 +14,7 @@ Here is the [AsyncAPI spec](https://github.com/specmatic/specmatic-order-contrac
 ## Definitions
 * BFF: Backend for Front End
 * Domain API: API managing the domain model
-* Specmatic Stub/Mock Server: Create a server that can act as a real service using its OpenAPI or AsyncAPI spec
+* specmatic mock/Mock Server: Create a server that can act as a real service using its OpenAPI or AsyncAPI spec
 
 ## Background
 A typical web application might look like this. We can use Specmatic to practice contract-driven development and test all the components mentioned below. In this sample project, we look at how to do this for nodejs BFF which is dependent on Domain API Service and JMS demonstrating both OpenAPI and AsyncAPI support in specmatic.
@@ -44,7 +44,7 @@ Access find orders api at http://localhost:8080/findAvailableProducts
 _*Note:* Unless domain api service is running on port 9000 and JMS is set up, above requests will fail.
 
 ## Run Tests
-This will start the specmatic stub server for domain api using the information in specmatic.json and run the karate tests that expects the domain api at port 9000.
+This will start the specmatic mock server for domain api using the information in specmatic.json and run the karate tests that expects the domain api at port 9000.
 
 - On Unix and Windows Powershell, please run: 
 ```shell
