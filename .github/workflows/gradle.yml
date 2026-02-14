@@ -26,23 +26,51 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
 
-    - name: Build BFF project with Gradle
-      run: ./gradlew build
-
-    - name: Run coverage report
-      run: ./gradlew jacocoTestReport
-
-    - name: Generate JaCoCo Badge
-      id: jacoco
-      uses: cicirello/jacoco-badge-generator@v2
-      with:
-        generate-branches-badge: true
-        jacoco-csv-file: build/reports/jacoco/test/jacocoTestReport.csv
-      if: matrix.os == 'ubuntu-latest'
-
-    - name: Log coverage percentage
+    - name: Save Specmatic license
+      if: github.ref == 'refs/heads/main'
       run: |
-        echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
-        echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
+        mkdir -p ~/.specmatic
+        echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
+
+    - name: Build with Gradle Wrapper
+      run: ./gradlew test
+
+    - name: Upload HTML Test Report
+      uses: actions/upload-artifact@v6
+      with:
+        name: ${{ matrix.os }}-${{ matrix.java }}-html-report
+        path: build/reports/specmatic/html
+
+    - name: Upload CTRF Report
+      uses: actions/upload-artifact@v6
+      if: always() # Run even if tests fail
+      with:
+        name: ctrf-report
+        path: build/reports/specmatic/async/test/ctrf/*.json
+        retention-days: 5
+
+      # Display CTRF test results
+    - name: Publish Test Results
+      uses: ctrf-io/github-test-reporter@v1
+      if: always() # Run even if tests fail
+      with:
+        report-path: './build/reports/specmatic/test/ctrf/*.json'
+
+    - name: Run coverage report without re-running the tests
+      run: ./gradlew jacocoTestReport -x test
+
+    - name: Run Specmatic Insights Build Reporter
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker run \
+          -v ${{ github.workspace }}:/usr/src/app \
+          -v ~/.specmatic:/root/.specmatic \
+          specmatic/specmatic \
+          send-report \
+          --metadata build_url=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
+          --branch-name ${{ github.ref_name }} \
+          --repo-name ${{ github.event.repository.name }} \
+          --repo-id ${{ github.repository_id }} \
+          --repo-url ${{ github.event.repository.html_url }}
   
       
