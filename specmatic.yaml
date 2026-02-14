@@ -70,8 +70,8 @@ components:
       asyncapi:
         type: mock
         inMemoryBroker:
-          host: localhost
+          host: 0.0.0.0
           port: 9127
         servers:
-          - host: tcp://localhost:9127
+          - host: tcp://0.0.0.0:9127
             protocol: jms
