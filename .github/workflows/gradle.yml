@@ -60,7 +60,7 @@ jobs:
       run: ./gradlew jacocoTestReport -x test
 
     - name: Run Specmatic Insights Build Reporter
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest' # Run only once for the main branch on Ubuntu
       run: |
         docker run \
           -v ${{ github.workspace }}:/usr/src/app \
