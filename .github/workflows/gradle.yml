@@ -56,6 +56,7 @@ jobs:
         echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
     - name: Build with Gradle Wrapper
+      shell: bash
       run: ./gradlew test ${ENTERPRISE_VERSION:+-PspecmaticEnterpriseVersion=${ENTERPRISE_VERSION}}
 
     - name: Upload HTML Test Report
