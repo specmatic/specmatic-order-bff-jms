@@ -23,7 +23,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
         java: [17]
     runs-on: ${{ matrix.os }}
     env:
