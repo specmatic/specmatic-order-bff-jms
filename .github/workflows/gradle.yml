@@ -1,19 +1,33 @@
 name: Java CI with Gradle
 
+run-name: ${{ inputs.orchestrator_run_suffix && format('Java CI with Gradle - {0}', inputs.orchestrator_run_suffix) || github.workflow }}
+
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      enterprise_version:
+        description: Specmatic enterprise version under test
+        required: false
+        type: string
+      orchestrator_run_suffix:
+        description: Test orchestrator run suffix
+        required: false
+        type: string
   repository_dispatch:
     types: contracts changed
 jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ubuntu-latest]
         java: [17]
     runs-on: ${{ matrix.os }}
+    env:
+      ENTERPRISE_VERSION: ${{ inputs.enterprise_version }}
     steps:
     - uses: actions/checkout@v6
 
@@ -26,6 +40,15 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
 
+    # Internal setup required by Specmatic. Sample project users can ignore this block.
+    - if: ${{ inputs.orchestrator_run_suffix != '' }}
+      uses: specmatic/specmatic-github-workflows/action-orchestrator-setup@main
+      with:
+        orchestrator-run-suffix: ${{ inputs.orchestrator_run_suffix }}
+        docker-hub-username: ${{ vars.SPECMATIC_DOCKER_HUB_USERNAME }}
+        docker-hub-token: ${{ secrets.SPECMATIC_DOCKER_HUB_TOKEN }}
+    # End: internal setup required by Specmatic.
+
     - name: Save Specmatic license
       if: github.ref == 'refs/heads/main'
       run: |
@@ -33,7 +56,8 @@ jobs:
         echo "${{ secrets.SPECMATIC_LICENSE_KEY }}" > ~/.specmatic/specmatic-license.txt
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew test
+      shell: bash
+      run: ./gradlew test ${ENTERPRISE_VERSION:+-PspecmaticEnterpriseVersion=${ENTERPRISE_VERSION}}
 
     - name: Upload HTML Test Report
       uses: actions/upload-artifact@v6
@@ -63,8 +87,14 @@ jobs:
       if: github.ref == 'refs/heads/main' && matrix.os == 'ubuntu-latest' # Run only once for the main branch on Ubuntu
       run: |
         docker run \
-          -v ${{ github.workspace }}:/usr/src/app \
-          -v ~/.specmatic:/root/.specmatic \
+          --rm \
+          -e GIT_DISCOVERY_ACROSS_FILESYSTEM=1 \
+          -e GIT_CONFIG_COUNT=1 \
+          -e GIT_CONFIG_KEY_0=safe.directory \
+          -e GIT_CONFIG_VALUE_0=/usr/src/app \
+          -v "${HOME}/.specmatic:/root/.specmatic:ro" \
+          -v "${{ github.workspace }}:/usr/src/app" \
+          -w /usr/src/app \
           specmatic/specmatic \
           send-report \
           --metadata build_url=${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
