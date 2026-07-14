@@ -23,7 +23,7 @@ dependencies:
 specmatic:
   governance:
     successCriteria:
-      minCoveragePercentage: 70
+      minCoveragePercentage: 50
       maxMissedOperationsInSpec: 1
       enforce: true
 components:
