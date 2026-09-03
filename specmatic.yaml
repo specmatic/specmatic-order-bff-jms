@@ -73,5 +73,7 @@ components:
           host: 0.0.0.0
           port: 9127
         servers:
-          - host: tcp://0.0.0.0:9127
+          - host: tcp://localhost:9127
             protocol: jms
+            adminCredentials:
+              broker.type: classic
