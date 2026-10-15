@@ -1,7 +1,10 @@
 package com.component.orders.contract
 
 import org.assertj.core.api.Assertions.assertThat
+import org.awaitility.Awaitility.await
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.condition.EnabledIf
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
@@ -19,6 +22,7 @@ import java.time.Duration
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @EnabledIf(value = "isNonCIOrLinux", disabledReason = "Run only on Linux in CI; all platforms allowed locally")
 class ContractTestsUsingTestContainer {
     companion object {
@@ -68,6 +72,7 @@ class ContractTestsUsingTestContainer {
                 .withCommand("mock")
                 .withFileSystemBind("./src", "/usr/src/app/src", BindMode.READ_ONLY)
                 .withFileSystemBind("./specmatic.yaml", "/usr/src/app/specmatic.yaml", BindMode.READ_ONLY)
+                .withFileSystemBind("${System.getProperty("user.home")}/.specmatic", "/root/.specmatic", BindMode.READ_ONLY)
                 .withFileSystemBind(
                     "./build/reports/specmatic",
                     "/usr/src/app/build/reports/specmatic",
@@ -81,6 +86,7 @@ class ContractTestsUsingTestContainer {
                 .withCommand("test")
                 .withFileSystemBind("./src", "/usr/src/app/src", BindMode.READ_ONLY)
                 .withFileSystemBind("./specmatic.yaml", "/usr/src/app/specmatic.yaml", BindMode.READ_ONLY)
+                .withFileSystemBind("${System.getProperty("user.home")}/.specmatic", "/root/.specmatic", BindMode.READ_ONLY)
                 .withFileSystemBind(
                     "./build/reports/specmatic",
                     "/usr/src/app/build/reports/specmatic",
@@ -99,5 +105,12 @@ class ContractTestsUsingTestContainer {
         testContainer.start()
         val hasSucceeded = testContainer.logs.contains("Failures: 0")
         assertThat(hasSucceeded).isTrue()
+    }
+
+    @BeforeAll
+    fun awaitHealth() {
+        await().atMost(Duration.ofSeconds(30)).until {
+            restTemplate.getForEntity("http://localhost:8080/actuator/health", String::class.java).statusCode == org.springframework.http.HttpStatus.OK
+        }
     }
 }
